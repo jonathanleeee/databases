@@ -21,6 +21,13 @@ app.use(parser.json());
 //   res.send('got to messages');
 // })
 // Set up our routes
+app.use(function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  next();
+});
 app.use('/classes', router);
 
 // Serve the client files
