@@ -5,13 +5,18 @@ module.exports = {
     get: function (callback) {
       var queryArgs = [];
       console.log('')
-      db.query('select * from messages;', queryArgs, function(err, results) {
+      var queryString = 'select messages.id, messages.text, messages.room, users.name \
+                      from messages left outer join users on (messages.users = users.id) \
+                      order by messages.id desc';
+      db.query(queryString, queryArgs, function(err, results) {
         callback(results);
       });
     }, // a function which produces all the messages
     post: function (message, callback) {
       var queryArgs = [];
-      db.query('insert into messages (text, room, user) values (?)', message, function(err, results) {
+      var queryString = 'insert into messages(text, users, room) \
+                      value (?, (select id from users where users = ? limit 1), ?)';
+      db.query(queryString, message, function(err, results) {
         callback(results);
       }); // a function which can be used to insert a message into the database
     }
